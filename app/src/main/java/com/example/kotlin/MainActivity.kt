@@ -15,20 +15,28 @@ class MainActivity : AppCompatActivity() {
         val tw = findViewById<TextView>(R.id.tw)
 
 
-       val square = Rectangle(2.2, 2.2)
-        val rec = Rectangle(2.2, 2.2)
-        if (square == rec){
-            tw. text = "yes"
+tw.text = groupWords(arrayOf("eat", "tea", "tan", "ate", "nat", "bat")).toString()
+
+
+    }
+    fun groupWords(words: Array<String>): List<List<String>>{
+        val result: MutableList<List<String>> = mutableListOf()
+        val map = mutableMapOf<String, MutableList<String>>()
+
+        for (word in words){
+            val sortedWord = word.toCharArray().sorted().joinToString("")
+            if(map.containsKey(sortedWord))
+                map[sortedWord]?.add(word)
+            else
+                map[sortedWord] = mutableListOf(word)
         }
+
+        for ((key, value) in map){
+            result.add(value)
+        }
+
+
+        return result
     }
 }
 
-
- data class Rectangle (var height: Double, var length: Double){
-    var perim = (height + length) * 2
-
-    var description = "description"
-        get() = field
-        set(value) {field = value}
-
-}
