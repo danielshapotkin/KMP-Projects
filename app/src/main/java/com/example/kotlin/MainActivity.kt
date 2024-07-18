@@ -1,5 +1,6 @@
 package com.example.kotlin
 
+import android.health.connect.datatypes.units.Length
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -13,24 +14,21 @@ class MainActivity : AppCompatActivity() {
 
         val tw = findViewById<TextView>(R.id.tw)
 
-        val anna = Person("anna", 11, "shap")
-        val dan = Person("dan", 11, "shap", anna)
-        tw.text = "${anna.firstName} ${dan.firstName}"
+
+       val square = Rectangle(2.2, 2.2)
+        val rec = Rectangle(2.2, 2.2)
+        if (square == rec){
+            tw. text = "yes"
+        }
     }
 }
 
-class Person(var firstName: String, var age: Int, var lastName: String) {
-    var childrens: MutableList<Person> = mutableListOf()
 
-    // Инициализатор класса
-    init {
-        println("Person $firstName is created")
-    }
+ data class Rectangle (var height: Double, var length: Double){
+    var perim = (height + length) * 2
 
-    // Вторичный конструктор
-    constructor(firstName: String, age: Int, lastName: String, children: Person):
-        this (firstName, age, lastName){
-            childrens.add(children)
-        }
+    var description = "description"
+        get() = field
+        set(value) {field = value}
 
 }
