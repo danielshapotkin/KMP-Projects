@@ -27,8 +27,9 @@ tw.text = groupWords(arrayOf("eat", "tea", "tan", "ate", "nat", "bat")).toString
             val sortedWord = word.toCharArray().sorted().joinToString("")
             if(map.containsKey(sortedWord))
                 map[sortedWord]?.add(word)
-            else
+            else {
                 map[sortedWord] = mutableListOf(word)
+            }
         }
 
         for ((key, value) in map){
