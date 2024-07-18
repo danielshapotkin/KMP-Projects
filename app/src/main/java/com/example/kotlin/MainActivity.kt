@@ -3,34 +3,34 @@ package com.example.kotlin
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import java.sql.Array
+import kotlinx.coroutines.NonCancellable.children
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<TextView>(R.id.tw).text = "fghj"
-        val a = listOf(1, 2, 3, 4)
-        testLambda(a)
+        val tw = findViewById<TextView>(R.id.tw)
 
-
+        val anna = Person("anna", 11, "shap")
+        val dan = Person("dan", 11, "shap", anna)
+        tw.text = "${anna.firstName} ${dan.firstName}"
     }
-//Lambda
+}
 
+class Person(var firstName: String, var age: Int, var lastName: String) {
+    var childrens: MutableList<Person> = mutableListOf()
 
-    fun testLambda(input: List<Int>) {
-   input.forEach { println(it*2) }
-        input.map { println(it*2)  }
-        println(input.filter { number-> number%2==0 })
-        println(input.reduce { sum, number -> sum + number})
-
-
-
+    // Инициализатор класса
+    init {
+        println("Person $firstName is created")
     }
+
+    // Вторичный конструктор
+    constructor(firstName: String, age: Int, lastName: String, children: Person):
+        this (firstName, age, lastName){
+            childrens.add(children)
+        }
 
 }
