@@ -15,20 +15,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViewById<TextView>(R.id.tw).text = "fghj"
-        testWhen(1)
+        val a = listOf(1, 2, 3, 4)
+        testLambda(a)
 
 
     }
-
-    fun testWhen(input: Any) {
-        when(input) {
-        1-> Log.d("", "1")
-        is String -> Log.d("", "Строка")
-        else -> Log.d("", "Something else")
-        }
-    }
+//Lambda
 
 
+    fun testLambda(input: List<Int>) {
+   input.forEach { println(it*2) }
+        input.map { println(it*2)  }
+        println(input.filter { number-> number%2==0 })
+        println(input.reduce { sum, number -> sum + number})
 
 
 
