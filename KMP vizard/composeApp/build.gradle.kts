@@ -54,6 +54,9 @@ kotlin {
         }
         androidMain.dependencies {
             implementation("io.ktor:ktor-client-android:$ktorVersion")
+            implementation ("androidx.compose.ui:ui:1.5.0")
+            implementation ("androidx.compose.material:material:1.5.0")
+            implementation ("androidx.compose.ui:ui-tooling-preview:1.5.0")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")

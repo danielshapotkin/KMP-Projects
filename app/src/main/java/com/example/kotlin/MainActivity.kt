@@ -16,6 +16,10 @@ class MainActivity : AppCompatActivity() {
 
 
 tw.text = groupWords(arrayOf("eat", "tea", "tan", "ate", "nat", "bat")).toString()
+val arr: Array<Int?> = arrayOfNulls<Int>(1)
+        arr[0] = if ((1..10).random()<5) 12 else null
+        arr[0] = arr[0]!! + 1
+
 
 
     }
