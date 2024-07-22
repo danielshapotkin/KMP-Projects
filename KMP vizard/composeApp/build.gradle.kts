@@ -57,6 +57,7 @@ kotlin {
             implementation ("androidx.compose.ui:ui:1.5.0")
             implementation ("androidx.compose.material:material:1.5.0")
             implementation ("androidx.compose.ui:ui-tooling-preview:1.5.0")
+            implementation("com.android.volley:volley:1.2.1")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")

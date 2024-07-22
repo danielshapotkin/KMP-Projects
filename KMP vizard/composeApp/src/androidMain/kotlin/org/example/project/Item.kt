@@ -12,8 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,13 +28,9 @@ import androidx.compose.ui.unit.sp
 fun Item (actor: Actor, index: Int){
     val showDialog = remember { mutableStateOf(false) }
     val selectedActorIndex = remember { mutableStateOf(0) }
-    val counter = remember { mutableStateOf(0) }
-    val actorImages = listOf(
-        R.drawable.zack,
-        R.drawable.second,
-        R.drawable.tjhird,
-        R.drawable.fourth
-    )
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
     Card(
         elevation = 5.dp,
         shape = RoundedCornerShape(15.dp),
@@ -42,7 +40,6 @@ fun Item (actor: Actor, index: Int){
             .clickable {
                 selectedActorIndex.value = index
                 showDialog.value = true
-                counter.value++
             }
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -57,7 +54,9 @@ fun Item (actor: Actor, index: Int){
             )
             Column {
                 Text(text = actor.title, fontSize = 20.sp)
-                Text(text = "Actor")
+                Text(modifier = Modifier.clickable {
+                    isExpanded = !isExpanded
+                }, maxLines = if (isExpanded)10 else 1, text = actor.content)
             }
         }
     }
