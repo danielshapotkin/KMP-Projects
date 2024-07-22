@@ -11,39 +11,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 
-class MyAlertDialog{
-    @Composable
-    fun MyAlertDialog(
-        showDialog: MutableState<Boolean>,
-        onDismiss: () -> Unit,
-        index:Int
-    ) {
-        if (showDialog.value) {
-            AlertDialog(
-                onDismissRequest = {
-                    showDialog.value = false
-                    onDismiss()
-                },
-                title = { Text(text = "Actor Info") },
-                text = { Text("") },
-                confirmButton = {
-                    Button(onClick = {
-                        showDialog.value = false
-                        onDismiss()
-                    }) {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    Button(onClick = {
-                        showDialog.value = false
-                        onDismiss()
-                    }) {
-                        Text("Cancel")
-                    }
-                }
-            )
+@Composable
+fun MyAlertDialog(
+    onDismiss: () -> Unit,
+    actorIndex: Int
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Info") },
+        text = { Text(text = Info().getInfo(actorIndex + 1)) },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
         }
-    }
-
+    )
 }
