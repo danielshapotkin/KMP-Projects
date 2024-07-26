@@ -1,67 +1,108 @@
 package org.example.project
 
-import android.app.DownloadManager
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import org.json.JSONObject
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private val API_KEY = "9cbbdbaf4f0aa3a2b5558f122d628b22"
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val sharedFlow = MutableSharedFlow<People>()
+    private val mutableState = MutableStateFlow(People(1, "unknown"))
 
-        setContent {
-            val state = remember { mutableStateOf("Unknown") }
-            LazyColumn (
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                itemsIndexed(
-                    listOf(
-                        Actor(R.drawable.zack, "Zack", "test dytsfaiwytg sytadfyjag sjydtfajytsf twghjkiwhgpewjiogloiesj"
-                                + "bytufjuyjqkygcuih87353btyfqiuyfgbjauygbjydtfgvjutijytkjbkuygjytgukygkuygiuygy uyguygkuygkuyg"),
-                        Actor(R.drawable.second, "Second", "test"),
-                        Actor(R.drawable.tjhird, "Third", "test"),
-                        Actor(R.drawable.fourth, "Fourth", "test")
-                    )
-                ) { index, item ->
-                        Item(item, index)
-                }
-            }
-            Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()){
-                Text(text = state.value, modifier = Modifier.clickable {
-                   // getResult("Minsk", state, this@MainActivity)
-                })
-            }
-
-
+    private val flow = flow {
+        for (i in 1..10) {
+            delay(1000)
+            emit(People(i, "Daniel $i"))
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+
+
+        // Set Content
+        setContent {
+            var showContent by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                delay(3000) // Delay to show the content after 6 seconds
+                showContent = true
+            }
+
+            // Display either the loading screen or the main content
+            if (showContent) {
+                MainScreen()
+            }
+        }
+        // Collect values from Flow and update commonFlow
+        lifecycleScope.launch {
+            flow.collect { value ->
+                mutableState.value = value
+            }
+        }
+
+        // Emit values into SharedFlow
+        lifecycleScope.launch {
+            for (i in 1..10) {
+                delay(1000)
+                sharedFlow.emit(People(i, "Daniel"))
+            }
+        }
+    }
+
+    @Composable
+    fun MainScreen() {
+        val sharedFlowValues by sharedFlow.collectAsState(initial = People(0, "Initial"))
+        val flowValues by flow.collectAsState(initial = People(0, "Initial"))
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Box(
+                Modifier
+                    .size(120.dp, 120.dp)
+                    .background(Color.Red),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(
+                    onClick = {
+
+                    }
+                ) {
+                    Text("Toggle Color")
+                }
+            }
+
+            // Display flow values
+            Text(
+                text = "Flow Values: ${flowValues.name} - ${flowValues.age}",
+                modifier = Modifier.padding(16.dp)
+            )
+
+            // Display sharedFlow values
+            Text(
+                text = "SharedFlow Values: ${sharedFlowValues.name} - ${sharedFlowValues.age}",
+                modifier = Modifier.padding(16.dp)
+            )
+
+        }
+    }
 }
 
+data class People(
+    val age: Int,
+    val name: String
+)
