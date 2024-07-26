@@ -87,7 +87,7 @@ fun Greeting(modifier: Modifier = Modifier) {
     }
 
     val lazyValue: String by lazy {
-        println("Computed!")
+        println("Computedd!")
         "Hello, Kotlin!"
     }
 
