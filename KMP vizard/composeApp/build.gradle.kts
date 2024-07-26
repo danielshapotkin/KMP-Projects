@@ -101,4 +101,7 @@ android {
         debugImplementation(compose.uiTooling)
     }
 }
+dependencies {
+    implementation(libs.volley)
+}
 
