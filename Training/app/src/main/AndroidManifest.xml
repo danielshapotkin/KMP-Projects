@@ -24,7 +24,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Настройка диплинка -->
+
+
                 <data android:scheme="myapp"
                     android:host="auth"
                     android:pathPrefix="/callback" />

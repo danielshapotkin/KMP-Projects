@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET
-    fun getToken()
+    fun getToken(): retrofit2.Response<Unit>
 }

@@ -11,7 +11,7 @@
         android:id="@+id/tw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="myapp://auth/callback?code=AUTHORIZATION_CODE&amp;state=12345"
+        android:text="TW"
         android:autoLink="all"
     android:linksClickable="true"
     android:textSize="16sp"
