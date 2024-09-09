@@ -51,8 +51,8 @@ dependencies {
     implementation (libs.converter.gson)
     implementation (libs.okhttp)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1") // Add the Kotlin serialization library
-
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("androidx.browser:browser:1.8.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
