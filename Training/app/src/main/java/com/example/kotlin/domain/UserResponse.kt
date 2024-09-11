@@ -1,4 +1,4 @@
-package com.example.kotlin.data
+package com.example.kotlin.domain
 
 data class UserResponse (
     val id: String,

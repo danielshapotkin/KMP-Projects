@@ -1,6 +1,10 @@
 package com.example.kotlin.data
 
 import android.util.Log
+import com.example.kotlin.domain.AccessTokenResponse
+import com.example.kotlin.domain.ApiFunction
+import com.example.kotlin.domain.IApi
+import com.example.kotlin.domain.UserResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,44 +14,23 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-class InstagramApi {
-
-
-
-    interface ApiService {
-        @FormUrlEncoded
-        @POST("/oauth/access_token")
-        suspend fun getAccessToken(
-            @Field("client_id") clientId: String,
-            @Field("client_secret") clientSecret: String,
-            @Field("grant_type") grantType: String,
-            @Field("redirect_uri") redirectUri: String,
-            @Field("code") code: String
-        ): Response<AccessTokenResponse>
-
-        @GET("/me")
-        suspend fun getInstagramUsername(
-        @Query("fields") fields: String = "id, username",
-        @Query("access_token") accessToken: String
-        ): Response<UserResponse>
-    }
-
+class Api: IApi{
     private val BASE_URL = "https://api.instagram.com/"
-    val apiService: ApiService by lazy {
+    val apiService: ApiFunction by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
+            .create(ApiFunction::class.java)
     }
 
     private val BASE_GET_URL = "https://graph.instagram.com/me/"
-    val GetApiService: ApiService by lazy {
+    val GetApiService: ApiFunction by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_GET_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
+            .create(ApiFunction::class.java)
     }
 
 
@@ -60,7 +43,7 @@ class InstagramApi {
     }
 
     // Основной метод для получения токена доступа
-    suspend fun fetchInstagramAccessToken(authCode: String): AccessTokenResponse? {
+    override suspend fun fetchInstagramAccessToken(authCode: String): AccessTokenResponse? {
         return try {
             val response = apiService.getAccessToken(
                 clientId = CLIENT_ID,
@@ -75,7 +58,7 @@ class InstagramApi {
             null
         }
     }
-    suspend fun getUsername(token: String): UserResponse? {
+    override suspend fun getUsername(token: String): UserResponse? {
      return try {
          val response = GetApiService.getInstagramUsername("id, username", token)
          response.body()
