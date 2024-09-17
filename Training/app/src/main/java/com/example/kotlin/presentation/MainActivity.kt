@@ -1,66 +1,96 @@
 package com.example.kotlin.presentation
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.kotlin.R
-import com.example.kotlin.data.Api
-import com.example.kotlin.data.Repository
-import kotlinx.coroutines.Dispatchers
+import com.example.kotlin.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private var code: String = ""
-    private var accesToken: String = ""
+    private var accessToken: String = ""
     private var userId: String = ""
-    private lateinit var tw: TextView
-    private lateinit var webView: WebView
-    private lateinit var btnReg: Button
-    private lateinit var btnGet: Button
-    lateinit var repository: Repository
 
+    private lateinit var binding: ActivityMainBinding
+    private val mainViewModel: MainViewModel = MainViewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        webView = findViewById(R.id.webView)
-        webView.webViewClient = WebViewClient()
-        webView.settings.javaScriptEnabled = true
-        tw = findViewById(R.id.tw)
-        btnReg = findViewById(R.id.button)
-        btnGet = findViewById(R.id.button2)
-        repository = Repository(this, webView) { uri ->
-            handleDeepLink(uri)
-        }
-        btnReg.setOnClickListener {
-           code = repository.getAuthCode().toString()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val url = request?.url.toString()
+                if (url.contains("code=")) {
+                    handleDeepLink(Uri.parse(url))
+                    return true
+                }
+                return false
+            }
         }
 
-        btnGet.setOnClickListener {
+        mainViewModel.events.observe(this, eventsListener)
+        mainViewModel.states.observe(this, uiStateListener)
+
+        binding.button.setOnClickListener {
+            mainViewModel.hideButtons()
+            mainViewModel.getAuthCode().toString()
+        }
+
+        binding.button2.setOnClickListener {
             lifecycleScope.launch {
-                repository.getToken(code)
+                mainViewModel.getToken(code)
+                mainViewModel.getUsername()
             }
         }
     }
 
     private fun handleDeepLink(data: Uri?) {
         data?.let {
-            Toast.makeText(this, "Deeplink", Toast.LENGTH_LONG).show()
+            mainViewModel.showButtons()
             code = it.getQueryParameter("code").toString()
-            (webView.parent as? ViewGroup)?.removeView(webView)
+            (binding.webView.parent as? ViewGroup)?.removeView(binding.webView)
         }
     }
 
+    private val eventsListener: (MainViewModel.Events) -> Unit = { event ->
+        when (event) {
+            MainViewModel.Events.Nothing -> { /* No action needed */
+            }
 
+            is MainViewModel.Events.OpenUrl -> {
+                binding.webView.loadUrl(event.url)
+            }
+
+            MainViewModel.Events.HideButtons -> {
+                binding.button.visibility = View.GONE
+                binding.button2.visibility = View.GONE
+            }
+
+            MainViewModel.Events.ShowButtons -> {
+                binding.button.visibility = View.VISIBLE
+                binding.button2.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private val uiStateListener: (MainViewModel.States) -> Unit = { states ->
+        binding.tw.text = states.text
+        binding.progressBar.visibility = if (states.isShowProgress) View.VISIBLE else View.GONE
+    }
 }

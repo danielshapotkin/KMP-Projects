@@ -5,6 +5,7 @@ import com.example.kotlin.domain.AccessTokenResponse
 import com.example.kotlin.domain.ApiFunction
 import com.example.kotlin.domain.IApi
 import com.example.kotlin.domain.UserResponse
+import com.example.kotlin.domain.refreshTokenResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,7 +25,7 @@ class Api: IApi{
             .create(ApiFunction::class.java)
     }
 
-    private val BASE_GET_URL = "https://graph.instagram.com/me/"
+    private val BASE_GET_URL = "https://graph.instagram.com/"
     val GetApiService: ApiFunction by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_GET_URL)
@@ -63,11 +64,14 @@ class Api: IApi{
          val response = GetApiService.getInstagramUsername("id, username", token)
          response.body()
      } catch (e: Exception) {
-         Log.d("Err", "MyErr")
          e.printStackTrace()
          null
      }
      }
+    override suspend fun refreshToken(oldToken: String): refreshTokenResponse? {
+            val response =  GetApiService.refreshToken("ig_refresh_token", oldToken)
+            return response.body()
+    }
     }
 
 

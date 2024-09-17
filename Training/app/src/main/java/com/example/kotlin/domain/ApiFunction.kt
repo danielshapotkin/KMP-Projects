@@ -23,4 +23,15 @@ interface ApiFunction {
         @Query("fields") fields: String = "id, username",
         @Query("access_token") accessToken: String
     ): Response<UserResponse>
+
+    @GET("/refresh_access_token")
+    suspend fun refreshToken(
+        @Query("grant_type") fields: String = "ig_refresh_token",
+        @Query("access_token") accessToken: String
+    ): Response<refreshTokenResponse>
+
+
+
+
 }
+

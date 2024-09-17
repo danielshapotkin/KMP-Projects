@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
 
     <application
         android:allowBackup="true"
@@ -18,14 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kotlin"
         tools:targetApi="31">
-
+        <activity
+            android:name=".presentation.WebActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.StudyKotlin">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -38,11 +40,11 @@
 
                 <!-- Настройка для обработки https://localhost/callback -->
                 <data
-                    android:scheme="https"
                     android:host="localhost"
-                    android:pathPrefix="/callback" />
+                    android:pathPrefix="/callback"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-
     </application>
+
 </manifest>
