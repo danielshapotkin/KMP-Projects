@@ -38,9 +38,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Настройка для обработки https://localhost/callback -->
+                <!-- Настройка для обработки https://aichatbotauth/callback -->
                 <data
-                    android:host="localhost"
+                    android:host="aichatbotauth"
                     android:pathPrefix="/callback"
                     android:scheme="https" />
             </intent-filter>

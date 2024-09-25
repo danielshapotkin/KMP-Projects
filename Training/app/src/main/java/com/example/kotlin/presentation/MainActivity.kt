@@ -1,5 +1,6 @@
 package com.example.kotlin.presentation
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -58,7 +60,26 @@ class MainActivity : BaseActivity() {
                 mainViewModel.getUsername()
             }
         }
+
+        binding.button3.setOnClickListener(){
+            val callbackUrl = "https://aichatbotauth/callback"
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(callbackUrl)
+            }
+            startActivity(intent)
+        }
+
+handleIntent(intent)
     }
+    private fun handleIntent(intent: Intent?) {
+        intent?.data?.let { uri ->
+            if (uri.host == "aichatbotauth" && uri.path == "/callback") {
+                // Сработала ссылка
+                Toast.makeText(this, "Сработала ссылка", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun handleDeepLink(data: Uri?) {
         data?.let {
