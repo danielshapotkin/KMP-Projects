@@ -30,15 +30,16 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.webView.settings.javaScriptEnabled = true
+
+
         binding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
                 val url = request?.url.toString()
-                if (url.contains("code=")) {
+                if (true) {
                     handleDeepLink(Uri.parse(url))
                     return true
                 }
@@ -49,7 +50,7 @@ class MainActivity : BaseActivity() {
         mainViewModel.events.observe(this, eventsListener)
         mainViewModel.states.observe(this, uiStateListener)
 
-        binding.button.setOnClickListener {
+        binding.authCodeButton.setOnClickListener {
             mainViewModel.hideButtons()
             mainViewModel.getAuthCode().toString()
         }
@@ -71,6 +72,30 @@ class MainActivity : BaseActivity() {
 
 handleIntent(intent)
     }
+
+    private fun handleDeepLink(data: Uri?) {
+        data?.let {
+            mainViewModel.showButtons()
+            Log.d("AuthCode", it.getQueryParameter("code").toString())
+            (binding.webView.parent as? ViewGroup)?.removeView(binding.webView)
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private fun handleIntent(intent: Intent?) {
         intent?.data?.let { uri ->
             if (uri.host == "aichatbotauth" && uri.path == "/callback") {
@@ -81,30 +106,31 @@ handleIntent(intent)
     }
 
 
-    private fun handleDeepLink(data: Uri?) {
-        data?.let {
-            mainViewModel.showButtons()
-            code = it.getQueryParameter("code").toString()
-            (binding.webView.parent as? ViewGroup)?.removeView(binding.webView)
-        }
-    }
+
+
+
+
+
+
+
+
+
 
     private val eventsListener: (MainViewModel.Events) -> Unit = { event ->
         when (event) {
-            MainViewModel.Events.Nothing -> { /* No action needed */
+            MainViewModel.Events.Nothing -> {
             }
-
             is MainViewModel.Events.OpenUrl -> {
                 binding.webView.loadUrl(event.url)
             }
 
             MainViewModel.Events.HideButtons -> {
-                binding.button.visibility = View.GONE
+                binding.authCodeButton.visibility = View.GONE
                 binding.button2.visibility = View.GONE
             }
 
             MainViewModel.Events.ShowButtons -> {
-                binding.button.visibility = View.VISIBLE
+                binding.authCodeButton.visibility = View.VISIBLE
                 binding.button2.visibility = View.VISIBLE
             }
         }

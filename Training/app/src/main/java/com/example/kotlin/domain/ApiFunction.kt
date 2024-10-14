@@ -11,12 +11,18 @@ interface ApiFunction {
     @FormUrlEncoded
     @POST("/oauth/access_token")
     suspend fun getAccessToken(
-        @Field("client_id") clientId: String,
-        @Field("client_secret") clientSecret: String,
-        @Field("grant_type") grantType: String,
-        @Field("redirect_uri") redirectUri: String,
-        @Field("code") code: String
-    ): Response<AccessTokenResponse>
+        @Field("BASE_URL") BASE_URL: String,
+        @Field("WORKSPACE_PATH") WORKSPACE_PATH: String,
+        @Field("COLLECTION_PATH") COLLECTION_PATH: String,
+        @Field("ACTION_SHARE") ACTION_SHARE: String,
+        @Field("SOURCE_COPY_LINK") SOURCE_COPY_LINK: String,
+        @Field("CREATOR_ID") CREATOR_ID: String
+
+    ): Response<AuthCodeResponse>
+
+
+
+
 
     @GET("/me")
     suspend fun getInstagramUsername(

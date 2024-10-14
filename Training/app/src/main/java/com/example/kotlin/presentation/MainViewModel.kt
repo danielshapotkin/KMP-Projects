@@ -13,7 +13,7 @@ class MainViewModel(
      context: Context
 ):  BaseViewModel() {
     companion object {
-       val OAUTH_URL = "https://instagram.com/oauth/authorize?client_id=438863165864035&redirect_uri=https://localhost/callback&scope=user_profile,user_media&response_type=code"
+       val OAUTH_URL = "https://login.microsoftonline.com/a56d564c-1c59-4ba5-8cb6-0770c1bf8783/oauth2/v2.0/authorize? client_id=e86a9e2d-48cb-431f-8f21-b43ff05f057a &response_type=code &redirect_uri=https://aichatbotauth/callback &response_mode=query &scope=https%3A%2F%2Fgraph.microsoft.com%2Fmail.read &state=12345198e049d7d05"
     }
 
     private val repository: IRepository = Repository.getInstance(context)

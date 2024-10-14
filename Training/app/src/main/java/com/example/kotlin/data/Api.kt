@@ -1,22 +1,15 @@
 package com.example.kotlin.data
 
-import android.util.Log
-import com.example.kotlin.domain.AccessTokenResponse
+import com.example.kotlin.domain.AuthCodeResponse
 import com.example.kotlin.domain.ApiFunction
 import com.example.kotlin.domain.IApi
 import com.example.kotlin.domain.UserResponse
 import com.example.kotlin.domain.refreshTokenResponse
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
 
 class Api: IApi{
-    private val BASE_URL = "https://api.instagram.com/"
+    private val BASE_URL = "https://web.postman.co/"
     val apiService: ApiFunction by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -35,23 +28,29 @@ class Api: IApi{
     }
 
 
-    // Добавим companion object для хранения неизменяемых констант
+
     companion object {
-        private const val CLIENT_ID = "438863165864035"
-        private const val CLIENT_SECRET = "d8cb059ce4956ed1ff24225771e4e9f8"
-        private const val REDIRECT_URI = "https://localhost/callback"
-        private const val GRANT_TYPE = "authorization_code"
+        const val BASE_URL = "https://web.postman.co/"
+        const val WORKSPACE_PATH = "workspace/My-Workspace~169da7dc-5430-4cbd-8697-48333522cf7d/"
+        const val COLLECTION_PATH = "collection/38177814-c5d0220f-253a-450e-9df9-30b9c33c919c/"
+        const val ACTION_SHARE = "action=share"
+        const val SOURCE_COPY_LINK = "source=copy-link"
+        const val CREATOR_ID = "creator=38177814"
+
+
+        const val FULL_LINK = "$BASE_URL$WORKSPACE_PATH$COLLECTION_PATH?$ACTION_SHARE&$SOURCE_COPY_LINK&$CREATOR_ID"
     }
 
-    // Основной метод для получения токена доступа
-    override suspend fun fetchInstagramAccessToken(authCode: String): AccessTokenResponse? {
+    // Основной метод для получения authcode
+    override suspend fun fetchInstagramAccessToken(authCode: String): AuthCodeResponse? {
         return try {
             val response = apiService.getAccessToken(
-                clientId = CLIENT_ID,
-                clientSecret = CLIENT_SECRET,
-                grantType = GRANT_TYPE,
-                redirectUri = REDIRECT_URI,
-                code = authCode
+                BASE_URL = BASE_URL,
+                WORKSPACE_PATH = WORKSPACE_PATH,
+                COLLECTION_PATH = COLLECTION_PATH,
+                ACTION_SHARE = ACTION_SHARE,
+                SOURCE_COPY_LINK = SOURCE_COPY_LINK,
+                CREATOR_ID = CREATOR_ID,
             )
             response.body()
         } catch (e: Exception) {
